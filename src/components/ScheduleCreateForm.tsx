@@ -36,7 +36,6 @@ export default function ScheduleCreateForm({ onCreate }: Props) {
         };
 
         const props = convertToAddScheduleProps(data)
-        console.table(props)
         addSchedule(props);
 
         onCreate()

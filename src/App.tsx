@@ -1,11 +1,11 @@
 import './App.css'
-import Schedule from './components/Schedule'
+import ScheduleTop from './components/ScheduleTop'
 
 function App() {
 
   return (
     <div>
-      <Schedule />
+      <ScheduleTop />
     </div>
   )
 }

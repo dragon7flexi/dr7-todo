@@ -24,10 +24,16 @@ button {
   border-radius: 1rem;
 }
 
+.edit-button {
+  background-color: greenyellow;
+}
+
+.quit-button {
+  background-color: gray;
+}
+
 .delete-button {
-  background-color: red;
-  width: 10rem;
-  border-radius: 1rem;
+  background-color: rgb(255, 66, 33);
 }
 
 .border-line {
