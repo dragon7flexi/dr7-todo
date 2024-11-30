@@ -1,40 +1,32 @@
-import { getAllSchedules } from "../utils/supabaseFunctions";
-import { useEffect, useState } from "react";
-
+import { useState } from "react";
 import { ScheduleType } from "../types/scheduleTypes";
-import ScheduleCreateForm from "./ScheduleCreateForm";
 import DeleteScheduleButton from "./DeleteScheduleButton";
+import EditSchedule from "./EditSchedule";
+import EditButton from "./EditButton";
 
-export default function Schedule() {
-    const [schedules, setSchedules] = useState<ScheduleType[]>([]);
+interface Props {
+    schedule: ScheduleType;
+    setSchedules: React.Dispatch<React.SetStateAction<ScheduleType[]>>;
+    fetchSchedules: () => void;
+}
 
-    const fetchSchedules = async () => {
-        const schedules = await getAllSchedules();
-        if (schedules) {
-            console.table(schedules);
-            setSchedules(schedules);
-        } else {
-            console.error("No schedules returned");
-        }
-    };
-
-    useEffect(() => {
-        fetchSchedules();
-    }, []);
+export default function Schedule({ schedule, setSchedules, fetchSchedules }: Props) {
+    const [isEditing, setIsEditing] = useState<boolean>(false);
 
     return (
         <div>
-            <h1>Schedules</h1>
-            <ScheduleCreateForm onCreate={fetchSchedules}/>
-            {schedules.map((schedule: ScheduleType) => (
-                <div key={schedule.id}>
+            {!isEditing ? (
+                <div>
                     <p>{schedule.start_time.toString()}</p>
                     <p>{schedule.end_time.toString()}</p>
                     <p>{schedule.title}</p>
-                    {/* <DeleteScheduleButton id={schedule.id} onDelete={fetchSchedules} /> */}
-                    <div className="border-line"></div>
+                    <EditButton setIsEditing={setIsEditing} />
                 </div>
-            ))}
+            ) : (
+                <EditSchedule setIsEditing={setIsEditing} />
+            )}
+            {/* <DeleteScheduleButton id={schedule.id} fetchSchedules={fetchSchedules} /> */}
+            <div className="border-line"></div>
         </div>
     );
 }

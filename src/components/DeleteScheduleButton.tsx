@@ -2,13 +2,13 @@ import { deleteSchedule } from "../utils/supabaseFunctions";
 
 interface Props {
     id: number;
-    onDelete: () => void;
+    fetchSchedules: () => void;
 }
 
-export default function DeleteScheduleButton({ id, onDelete }: Props) {
+export default function DeleteScheduleButton({ id, fetchSchedules }: Props) {
     const handleClick = async () => {
         await deleteSchedule(id);
-        onDelete(); // Trigger the re-fetch after deletion
+        fetchSchedules();
     };
 
     return (

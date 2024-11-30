@@ -1,4 +1,4 @@
-import { AddScheduleProps } from "../types/scheduleTypes";
+import { AddScheduleProps, ScheduleType } from "../types/scheduleTypes";
 import { supabase } from "./initSupabase";
 
 const NAME_OF_SCHEDULE_TABLE = "schedule"
@@ -21,6 +21,19 @@ export async function addSchedule({ title, start_time, end_time }: AddSchedulePr
         });
 
     console.log(res);
+}
+
+export async function updateSchedule({ id, title, start_time, end_time }: ScheduleType) {
+    const res = await supabase
+        .from(NAME_OF_SCHEDULE_TABLE)
+        .update({
+            title: title,
+            start_time: start_time,
+            end_time: end_time,
+        })
+        .eq('id', id)
+
+    console.log(res)
 }
 
 export async function deleteSchedule(id: number) {
