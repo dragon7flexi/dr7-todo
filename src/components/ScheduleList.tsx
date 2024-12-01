@@ -1,18 +1,16 @@
+import { useRecoilValue } from "recoil";
 import { ScheduleType } from "../types/scheduleTypes";
 import Schedule from "./Schedule";
+import { SchedulesAtom } from "../store/ScheduleAtom";
 
-interface Props {
-    schedules: ScheduleType[];
-    setSchedules: React.Dispatch<React.SetStateAction<ScheduleType[]>>;
-    fetchSchedules: () => void;
-}
+export default function ScheduleList() {
+    const schedules = useRecoilValue(SchedulesAtom);
 
-export default function ScheduleList({ schedules, setSchedules, fetchSchedules }: Props) {
     return (
         <div>
             {schedules.map((schedule: ScheduleType) => (
                 <div key={schedule.id}>
-                    <Schedule schedule={schedule} setSchedules={setSchedules} fetchSchedules={fetchSchedules}/>
+                    <Schedule schedule={schedule} />
                 </div>
             ))}
         </div>

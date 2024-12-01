@@ -1,4 +1,4 @@
-import { AddScheduleProps, ScheduleType } from "../types/scheduleTypes";
+import { AddScheduleProps, UpdateScheduleProps } from "../types/scheduleTypes";
 import { supabase } from "./initSupabase";
 
 const NAME_OF_SCHEDULE_TABLE = "schedule"
@@ -6,7 +6,8 @@ const NAME_OF_SCHEDULE_TABLE = "schedule"
 export async function getAllSchedules() {
      const res = await supabase
         .from(NAME_OF_SCHEDULE_TABLE)
-        .select("*");
+        .select("*")
+        // .ilike("title", "%test%");
 
     return res.data;
 }
@@ -18,12 +19,13 @@ export async function addSchedule({ title, start_time, end_time }: AddSchedulePr
             title: title,
             start_time: start_time,
             end_time: end_time
-        });
+        })
+        .select();
 
-    console.log(res);
+    return res.data;
 }
 
-export async function updateSchedule({ id, title, start_time, end_time }: ScheduleType) {
+export async function updateSchedule({ id, title, start_time, end_time }: UpdateScheduleProps) {
     const res = await supabase
         .from(NAME_OF_SCHEDULE_TABLE)
         .update({
@@ -32,8 +34,9 @@ export async function updateSchedule({ id, title, start_time, end_time }: Schedu
             end_time: end_time,
         })
         .eq('id', id)
+        .select()
 
-    console.log(res)
+    return res.data;
 }
 
 export async function deleteSchedule(id: number) {

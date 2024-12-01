@@ -1,45 +1,34 @@
 import { useForm } from "react-hook-form"
-import { AddScheduleProps } from "../types/scheduleTypes";
+import { RawScheduleCreateForm } from "../types/scheduleTypes";
 import { addSchedule } from "../utils/supabaseFunctions";
-import { concatenateTime } from "../utils/Time";
+import { convertToAddScheduleProps } from "../utils/scheduleUtils";
+import { useRecoilState } from "recoil";
+import { SchedulesAtom } from "../store/scheduleAtom";
 
-interface rawFormData {
-    title: string;
-    start_time_hour: string;
-    start_time_minute: string;
-    end_time_hour: string;
-    end_time_minute: string;
-}
 
-interface Props {
-    onCreate: () => void
-}
+export default function ScheduleCreateForm() {
+    const [schedules, setSchedules] = useRecoilState(SchedulesAtom);
 
-export default function ScheduleCreateForm({ onCreate }: Props) {
     const {
         register,
         handleSubmit,
-    } = useForm<rawFormData>();
+    } = useForm<RawScheduleCreateForm>();
 
-    const onSubmit = (data: rawFormData) => {
-        const convertToAddScheduleProps = (data: rawFormData): AddScheduleProps => {
-            const start_time = concatenateTime(data.start_time_hour, data.start_time_minute);
-            const end_time = concatenateTime(data.end_time_hour, data.end_time_minute);
-
-            const props: AddScheduleProps = {
-                title: data.title,
-                start_time: start_time,
-                end_time: end_time,
-            };
-
-            return props
-        };
-
+    const onSubmit = async (data: RawScheduleCreateForm) => {
         const props = convertToAddScheduleProps(data)
-        addSchedule(props);
 
-        onCreate()
-    }
+        try {
+            const succeedData = await addSchedule(props)
+
+            if (succeedData) {
+                setSchedules([...schedules, ...succeedData]);
+            } else {
+                console.error("No date returned from addSchedule");
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    };
     
     return (
         <div>

@@ -6,11 +6,9 @@ import EditButton from "./EditButton";
 
 interface Props {
     schedule: ScheduleType;
-    setSchedules: React.Dispatch<React.SetStateAction<ScheduleType[]>>;
-    fetchSchedules: () => void;
 }
 
-export default function Schedule({ schedule, setSchedules, fetchSchedules }: Props) {
+export default function Schedule({ schedule }: Props) {
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
     return (
@@ -21,11 +19,11 @@ export default function Schedule({ schedule, setSchedules, fetchSchedules }: Pro
                     <p>{schedule.end_time.toString()}</p>
                     <p>{schedule.title}</p>
                     <EditButton setIsEditing={setIsEditing} />
+                    <DeleteScheduleButton id={schedule.id} />
                 </div>
             ) : (
-                <EditSchedule setIsEditing={setIsEditing} />
+                <EditSchedule setIsEditing={setIsEditing} schedule={schedule} />
             )}
-            {/* <DeleteScheduleButton id={schedule.id} fetchSchedules={fetchSchedules} /> */}
             <div className="border-line"></div>
         </div>
     );

@@ -1,24 +1,33 @@
+import { useState } from "react";
 import { deleteSchedule } from "../utils/supabaseFunctions";
+import DeleteConfirm from "./DeleteConfirm";
 
 interface Props {
     id: number;
-    fetchSchedules: () => void;
 }
 
-export default function DeleteScheduleButton({ id, fetchSchedules }: Props) {
-    const handleClick = async () => {
-        await deleteSchedule(id);
-        fetchSchedules();
-    };
+export default function DeleteScheduleButton({ id }: Props) {
+    const [isDeleteConfirmOpen, SetDeleteConfirmOpen] = useState<boolean>(false);
+
+    const openDeleteConfirm = () => {
+        SetDeleteConfirmOpen(true);
+    }
+
+    const closeDeleteConfirm = () => {
+        SetDeleteConfirmOpen(false);
+    }
+
 
     return (
         <div>
             <button
-                onClick={handleClick}
+                onClick={openDeleteConfirm}
                 className="delete-button"
             >
                 Delete
             </button>
+
+            <DeleteConfirm isOpen={isDeleteConfirmOpen} onClose={closeDeleteConfirm} id={id} />
         </div>
     );
 }

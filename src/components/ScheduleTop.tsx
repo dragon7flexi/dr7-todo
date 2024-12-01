@@ -1,32 +1,32 @@
-import { getAllSchedules } from "../utils/supabaseFunctions";
-import { useEffect, useState } from "react";
-
-import { ScheduleType } from "../types/scheduleTypes";
+import { useEffect } from "react";
+import { useSetRecoilState } from "recoil";
 import ScheduleCreateForm from "./ScheduleCreateForm";
 import ScheduleList from "./ScheduleList";
+import { SchedulesAtom } from "../store/ScheduleAtom";
+import { getAllSchedules } from "../utils/supabaseFunctions";
 
 export default function ScheduleTop() {
-    const [schedules, setSchedules] = useState<ScheduleType[]>([]);
-
-    const fetchSchedules = async () => {
-        const schedules = await getAllSchedules();
-        if (schedules) {
-            console.table(schedules);
-            setSchedules(schedules);
-        } else {
-            console.error("No schedules returned");
-        }
-    };
+    const setSchedules = useSetRecoilState(SchedulesAtom);
 
     useEffect(() => {
-        fetchSchedules();
-    }, []);
+        const loadSchedules = async () => {
+            const schedules = await getAllSchedules();
+
+            if (schedules) {
+                setSchedules(schedules);
+            } else {
+                console.error("No schedules returned");
+            }
+        };
+
+        loadSchedules();
+    }, [setSchedules]);
 
     return (
         <div>
             <h1>Schedules</h1>
-            <ScheduleCreateForm onCreate={fetchSchedules}/>
-            <ScheduleList schedules={schedules} setSchedules={setSchedules} fetchSchedules={fetchSchedules}/>
+            <ScheduleCreateForm />
+            <ScheduleList />
         </div>
     );
 }
